@@ -3,7 +3,6 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="lib" target="1.7" />
-      <module name="UdpNetty.app" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

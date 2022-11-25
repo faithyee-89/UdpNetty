@@ -17,7 +17,7 @@ public class MessageBean {
     /**
      * 发送的消息
      */
-    private String msg;
+    private int[] msg;
 
     /**
      * 消息发送的次数
@@ -37,7 +37,7 @@ public class MessageBean {
      */
     private int serialNumber = 0;
 
-    public MessageBean(String ip, int port, String msg) {
+    public MessageBean(String ip, int port, int[] msg) {
         this.ip = ip;
         this.port = port;
         this.msg = msg;
@@ -59,11 +59,11 @@ public class MessageBean {
         this.port = port;
     }
 
-    public String getMsg() {
+    public int[] getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public void setMsg(int[] msg) {
         this.msg = msg;
     }
 

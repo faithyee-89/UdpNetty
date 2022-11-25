@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         UdpConfig config = new UdpConfig.Builder()
                 .setLoggable(true)
-                .setResendLimit(3)
-                .setResendEnable(true)
+                .setResendLimit(1)
+                .setResendEnable(false)
                 .setResendInterval(3000L)
                 .build();
         manager.init(config);
@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         manager.start(7777);
 
 //        udpServer.start();
-        findViewById(R.id.btnSend).setOnClickListener(v -> manager.sendMessage("192.168.2.2", 80, "123"));
+        findViewById(R.id.openShutter).setOnClickListener(v -> manager.sendMessage(CmdConst.IP, CmdConst.PORT, CmdConst.cmdOpenShutter));
+        findViewById(R.id.closeShutter).setOnClickListener(v -> manager.sendMessage(CmdConst.IP, CmdConst.PORT, CmdConst.cmdCloseShutter));
     }
 
     @Override

@@ -95,7 +95,7 @@ public class UdpManager {
         }
     }
 
-    public void sendMessage(String ip, int port, String msg) {
+    public void sendMessage(String ip, int port, int[] msg) {
         if (!ip.matches(Constant.IP_REGEX)) {
             LogUtil.e("invalid ip address");
             return;
@@ -104,7 +104,7 @@ public class UdpManager {
             LogUtil.e("invalid port");
             return;
         }
-        if (msg == null || msg.isEmpty()) {
+        if (msg == null || msg.length == 0) {
             LogUtil.e("send msg is null");
             return;
         }

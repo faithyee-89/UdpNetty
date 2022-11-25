@@ -4,6 +4,8 @@ import com.shencoder.udpnetty.bean.MessageBean;
 import com.shencoder.udpnetty.callback.DiscardMessageCallback;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -134,21 +136,26 @@ class UdpClient implements Runnable {
             msg.setResendTimes(msg.getResendTimes() + 1);
             msg.setSendTimeMillis(System.currentTimeMillis());
             msg.setSerialNumber(number);
-            byte[] msgArray = msg.getMsg().getBytes(Charset.forName("gb2312"));
-            byte[] byteArray = new byte[Constant.HEADER_LENGTH + msgArray.length];
-            byte[] lengthArray = AppUtil.intToByteArray(byteArray.length);
-            byte[] idArray = AppUtil.intToByteArray(1);
-            byte[] numberArray = AppUtil.intToByteArray(number);
-            System.arraycopy(lengthArray, 0, byteArray, 0, lengthArray.length);
-            System.arraycopy(idArray, 0, byteArray, 4, idArray.length);
-            System.arraycopy(numberArray, 0, byteArray, 8, numberArray.length);
-            System.arraycopy(msgArray, 0, byteArray, 12, msgArray.length);
+//            byte[] msgArray = msg.getMsg().getBytes(Charset.forName("gb2312"));
+//            byte[] byteArray = new byte[Constant.HEADER_LENGTH + msgArray.length];
+//            byte[] lengthArray = AppUtil.intToByteArray(byteArray.length);
+//            byte[] idArray = AppUtil.intToByteArray(1);
+//            byte[] numberArray = AppUtil.intToByteArray(number);
+//            System.arraycopy(lengthArray, 0, byteArray, 0, lengthArray.length);
+//            System.arraycopy(idArray, 0, byteArray, 4, idArray.length);
+//            System.arraycopy(numberArray, 0, byteArray, 8, numberArray.length);
+//            System.arraycopy(msgArray, 0, byteArray, 12, msgArray.length);
+            ByteBuf sendData = ByteBufAllocator.DEFAULT.buffer();
+            for (int i = 0; i < msg.getMsg().length; i++) {
+                sendData.writeByte(msg.getMsg()[i]);
+            }
+
             mChannel.writeAndFlush(
-                    new DatagramPacket(
-                            Unpooled.copiedBuffer(byteArray),
-                            new InetSocketAddress(msg.getIp(), msg.getPort())
+                            new DatagramPacket(
+                                    sendData,
+                                    new InetSocketAddress(msg.getIp(), msg.getPort())
+                            )
                     )
-            )
                     .addListener(future -> {
                         if (future != null) {
                             LogUtil.i(TAG + "send to ip : " + msg.getIp() + ":" + msg.getPort() + ", isSuccess: " + future.isSuccess() + ", serial number: " + number);
